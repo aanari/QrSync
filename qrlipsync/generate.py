@@ -23,6 +23,11 @@ class QrLipsyncGenerator:
     def __init__(self, settings, mainloop):
         signal.signal(signal.SIGINT, self._signal_handler)
         self.settings = settings
+        self.settings['background'] = 'red'
+        self.settings['width'] = 1080
+        self.settings['height'] = 1920
+        self.settings['qr_pix_size'] = 10
+
         self.mainloop = mainloop
         # self.duration = (settings.get('duration') - 1) * Gst.SECOND
         self.delay_audio_freq_change = (
@@ -66,7 +71,7 @@ class QrLipsyncGenerator:
         )
         video_caps = (
             "video/x-raw, format=(string)I420, width=(int)%s, height=(int)%s, framerate=(fraction)%s/1"
-            % (s.get("width", 320), s.get("height", 240), s.get("framerate", 30))
+            % (s.get("width", 1080), s.get("height", 1920), s.get("framerate", 30))
         )
         # the ticks duration is samplesperbuffer-long, so we need 1s long samples
         audio_src = (
@@ -108,7 +113,7 @@ class QrLipsyncGenerator:
     def _get_textoverlay(self):
         if self.settings.get("enable_textoverlay", True):
             return (
-                'timeoverlay text=%s halignment=center valignment=bottom font-desc="Arial 30"'
+                'timeoverlay text=%s halignment=center valignment=bottom font-desc="Arial 40"'
                 % self.settings.get("qrname")
             )
         return ""
@@ -118,7 +123,7 @@ class QrLipsyncGenerator:
         extra_data_array = ",".join([str(i) for i in data_array])
         plugin_name = s.get("qrname", "myqroverlay")
         x_position = 50
-        y_position = 20
+        y_position = 50
         error_correction = 3
         span_buffer = 1
         interval_buffers = self.settings["framerate"]
