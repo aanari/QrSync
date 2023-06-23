@@ -22,4 +22,4 @@ RUN \
 COPY . /src/qrlipsync
 WORKDIR /src/qrlipsync
 
-RUN pip install -e '.[testing]'
+RUN pip install --break-system-packages -e '.[testing]'
