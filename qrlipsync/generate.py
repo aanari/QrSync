@@ -27,7 +27,8 @@ class QrLipsyncGenerator:
         self.settings['width'] = 1080
         self.settings['height'] = 1920
         self.settings['qr_pix_size'] = 10
-
+        self.settings['duration'] = 15
+        
         self.mainloop = mainloop
         # self.duration = (settings.get('duration') - 1) * Gst.SECOND
         self.delay_audio_freq_change = (
