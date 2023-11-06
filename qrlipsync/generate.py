@@ -1,13 +1,13 @@
 #!/usr/bin/env python
+import logging
 import signal
 import sys
 import time
-import logging
 
 import gi
 
 gi.require_version("Gst", "1.0")  # noqa
-from gi.repository import GObject, Gst # noqa
+from gi.repository import GObject, Gst  # noqa
 
 Gst.init(None)
 
@@ -16,19 +16,19 @@ logger = logging.getLogger("qrcode_generator")
 
 class QrLipsyncGenerator:
     """
-        Generate video with qrcode incrusted using gstreamer
-        and each seconde, there is an audio beep at different frequency
+    Generate video with qrcode incrusted using gstreamer
+    and each seconde, there is an audio beep at different frequency
     """
 
     def __init__(self, settings, mainloop):
         signal.signal(signal.SIGINT, self._signal_handler)
         self.settings = settings
-        self.settings['background'] = 'red'
-        self.settings['width'] = 1080
-        self.settings['height'] = 1920
-        self.settings['qr_pix_size'] = 10
-        self.settings['duration'] = 15
-        
+        self.settings["background"] = "black"
+        self.settings["width"] = 1080
+        self.settings["height"] = 1920
+        self.settings["qr_pix_size"] = 18
+        self.settings["duration"] = 15
+
         self.mainloop = mainloop
         # self.duration = (settings.get('duration') - 1) * Gst.SECOND
         self.delay_audio_freq_change = (
@@ -138,7 +138,7 @@ class QrLipsyncGenerator:
             if not Gst.ElementFactory.find(qroverlay_element_name):
                 qroverlay_element_name = "qroverlay"
             qroverlay = (
-                '%s x=%s y=%s name=%s qrcode-error-correction=%s extra-data-span-buffers=%s extra-data-interval-buffers=%s extra-data-name=%s extra-data-array="%s" pixel-size=%s'
+                '%s x=%s y=%s name=%s qrcode-error-correction=%s extra-data-span-buffers=%s extra-data-interval-buffers=%s extra-data-array="%s" pixel-size=%s'
                 % (
                     qroverlay_element_name,
                     x_position,
@@ -147,7 +147,6 @@ class QrLipsyncGenerator:
                     error_correction,
                     span_buffer,
                     interval_buffers,
-                    data_name,
                     extra_data_array,
                     pixel_size,
                 )

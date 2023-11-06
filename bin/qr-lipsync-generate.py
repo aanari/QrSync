@@ -1,15 +1,16 @@
 #!/usr/bin/env python
-import os
-import sys
 import argparse
 import logging
+import os
+import sys
+
 from gi.repository import GLib
+
 from qrlipsync.generate import QrLipsyncGenerator
 
 logger = logging.getLogger("qrcode_generator")
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(
         description="Generate videos suitable for measuring lipsync with qrcodes",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -41,7 +42,7 @@ if __name__ == "__main__":
         "-q",
         "--qrcode-name",
         help="name inserted into the qrcode pattern",
-        default="cam1",
+        default="S",
     )
     parser.add_argument(
         "-d", "--duration", help="duration in seconds", type=int, default=30
@@ -52,7 +53,7 @@ if __name__ == "__main__":
         "-f",
         "--format",
         help="video format: qt/h264/pcm (default), mp4/h264/aac or webm/vp8/vorbis",
-        choices=["mp4", "qt", 'webm+vp8', 'webm+vp9'],
+        choices=["mp4", "qt", "webm+vp8", "webm+vp9"],
         default="qt",
     )
     parser.add_argument(
@@ -114,27 +115,27 @@ if __name__ == "__main__":
             4560,
             4800,
             5040,
-#            5280,
-#            5520,
-#            5760,
-#            6000,
-#            6240,
-#            6480,
-#            6720,
-#            6960,
-#            7200,
-#            7440,
-#            7680,
-#            7920,
-#            8160,
-#            8400,
-#            8640,
-#            8880,
-#            9120,
-#            9360,
-#            9600,
-#            9840,
-#            10080,
+            #            5280,
+            #            5520,
+            #            5760,
+            #            6000,
+            #            6240,
+            #            6480,
+            #            6720,
+            #            6960,
+            #            7200,
+            #            7440,
+            #            7680,
+            #            7920,
+            #            8160,
+            #            8400,
+            #            8640,
+            #            8880,
+            #            9120,
+            #            9360,
+            #            9600,
+            #            9840,
+            #            10080,
         ),
         "background": options.background,
         "enable_textoverlay": True,
@@ -142,8 +143,13 @@ if __name__ == "__main__":
 
     video_format = options.format
     outname = os.path.join(
-        options.output_dir, "%s-qrcode-%s-%s"
-        % (qrname, options.background, options.framerate,)
+        options.output_dir,
+        "%s-qrcode-%s-%s"
+        % (
+            qrname,
+            options.background,
+            options.framerate,
+        ),
     )
     if video_format == "qt":
         settings["muxer"] = "qtmux"
@@ -164,18 +170,18 @@ if __name__ == "__main__":
         settings["acodec"] = "fdkaacenc"
         settings["fileext"] = ".mp4"
     elif video_format.startswith("webm"):
-        vcodec = video_format.split('+')[1]
+        vcodec = video_format.split("+")[1]
         settings["muxer"] = "webmmux"
         bitrate = 20480000 if options.background == "snow" else 1024000
         settings["vcodec"] = (
-            "%senc target-bitrate=%s deadline=1 error-resilient=default threads=12 cpu-used=-16" % (
-                vcodec, bitrate)
+            "%senc target-bitrate=%s deadline=1 error-resilient=default threads=12 cpu-used=-16"
+            % (vcodec, bitrate)
         )
         settings["acodec"] = "audioconvert ! vorbisenc"
         settings["fileext"] = ".webm"
-        outname += '-' + vcodec
+        outname += "-" + vcodec
 
-    settings["output_file"] = outname + settings['fileext']
+    settings["output_file"] = outname + settings["fileext"]
 
     ml = GLib.MainLoop()
     qr_gen = QrLipsyncGenerator(settings, ml)
